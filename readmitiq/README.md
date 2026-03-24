@@ -22,6 +22,25 @@
 - [HIPAA Compliance](#-hipaa--security)
 - [Performance Benchmarks](#-performance-benchmarks)
 - [Extending the System](#-extending-the-system)
+- [Output Screenshots](#-output-screenshots)
+
+---
+
+## 📸 Output Screenshots
+
+![Dashboard](./outputimages/Screenshot%202026-03-24%20201735.png)
+
+![Patients](./outputimages/Screenshot%202026-03-24%20201756.png)
+
+![Prediction](./outputimages/Screenshot%202026-03-24%20201806.png)
+
+![Risk Trajectory](./outputimages/Screenshot%202026-03-24%20201816.png)
+
+![Financials](./outputimages/Screenshot%202026-03-24%20201836.png)
+
+![Simulation](./outputimages/Screenshot%202026-03-24%20201846.png)
+
+![Model](./outputimages/Screenshot%202026-03-24%20201855.png)
 
 ---
 
