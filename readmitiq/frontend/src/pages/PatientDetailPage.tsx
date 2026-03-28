@@ -259,25 +259,77 @@ export default function PatientDetailPage() {
             ))}
           </div>
 
-          {/* Recommended actions */}
-          {patient.recommended_actions?.length > 0 && (
-            <div className="card" style={{ padding: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                Recommended Actions
+          {/* Clinical Intervention Engine */}
+          <div className="card" style={{ 
+            padding: 16, 
+            border: '1px solid var(--accent-cyan-40)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Ambient glow */}
+            <div style={{
+              position: 'absolute', top: -40, right: -40, width: 80, height: 80,
+              background: 'var(--accent-cyan)', filter: 'blur(50px)', opacity: 0.15,
+              pointerEvents: 'none'
+            }} />
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--accent-cyan)', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Activity size={12} /> Intervention Engine
               </div>
-              {patient.recommended_actions.map((action: string, i: number) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 8, alignItems: 'flex-start',
-                  padding: '6px 0',
-                  borderBottom: i < patient.recommended_actions.length - 1 ? '1px solid var(--border-subtle)' : 'none',
-                  fontSize: 12, color: 'var(--text-secondary)',
-                }}>
-                  <span style={{ color: 'var(--accent-cyan)', flexShrink: 0, marginTop: 1 }}>›</span>
-                  {action}
-                </div>
-              ))}
+              <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: 'var(--accent-cyan)', color: '#000', fontWeight: 800 }}>BETA</span>
             </div>
-          )}
+            
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
+              Recommended Actions
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.4, fontStyle: 'italic' }}>
+              “We don’t just predict risk — we recommend personalized interventions.”
+            </div>
+
+            {patient.recommended_actions?.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {patient.recommended_actions.map((action: string, i: number) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ x: -5, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: i * 0.1 }}
+                    style={{
+                      display: 'flex', gap: 10, alignItems: 'flex-start',
+                      padding: '8px 10px',
+                      borderRadius: 6,
+                      background: 'rgba(255,255,255,0.03)',
+                      marginBottom: 4,
+                      fontSize: 12, color: 'var(--text-secondary)',
+                      border: '1px solid transparent',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(0,212,255,0.05)'
+                      e.currentTarget.style.borderColor = 'rgba(0,212,255,0.1)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
+                      e.currentTarget.style.borderColor = 'transparent'
+                    }}
+                  >
+                    <div style={{ 
+                      width: 16, height: 16, borderRadius: '50%', background: 'var(--accent-cyan)20', 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 
+                    }}>
+                      <div style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--accent-cyan)' }} />
+                    </div>
+                    <span style={{ lineHeight: 1.4 }}>{action}</span>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', padding: '10px 0' }}>
+                No active interventions for this risk tier.
+              </div>
+            )}
+          </div>
           
           {/* What If Simulation Sandbox */}
           <WhatIfSliders initialRisk={riskScore} patientId={id} />

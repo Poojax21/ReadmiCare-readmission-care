@@ -56,10 +56,10 @@ services:
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/2
-      CORS_ORIGINS: '["http://localhost:80","http://frontend:80","http://localhost:3000"]'
+      CORS_ORIGINS: '["http://localhost","http://localhost:80","http://localhost:3000","http://frontend:80"]'
       LOG_LEVEL: INFO
     ports:
-      - "8001:8000"
+      - "8000:8000"
     volumes:
       - model_artifacts:/app/models
     healthcheck:
@@ -98,7 +98,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "81:80"
+      - "80:80"
 
 volumes:
   postgres_data:

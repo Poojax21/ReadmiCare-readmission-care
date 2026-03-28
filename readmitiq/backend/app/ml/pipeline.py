@@ -1,11 +1,3 @@
-"""
-ReadmitIQ — ML Pipeline
-Hybrid ensemble pipeline: XGBoost + LightGBM + Logistic Regression + LSTM
-with Optuna hyperparameter optimization and SHAP explainability.
-"""
-
-from __future__ import annotations
-
 import json
 import logging
 import os
@@ -20,6 +12,9 @@ import pandas as pd
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger(__name__)
+
+from app.ml.intervention import ClinicalInterventionEngine
+intervention_engine = ClinicalInterventionEngine()
 
 
 # ── Feature Engineering ───────────────────────────────────────────────────────
@@ -577,7 +572,7 @@ def generate_clinical_explanation(
     top_features: List[Dict],
     patient_context: Dict,
 ) -> Tuple[str, List[str]]:
-    """Generate human-readable explanation for clinicians."""
+    """Generate human-readable explanation with personalized clinical actions."""
 
     tier = (
         "HIGH" if risk_score >= 0.70
@@ -587,8 +582,8 @@ def generate_clinical_explanation(
     pct = int(risk_score * 100)
 
     # Build narrative from top positive SHAP features
-    pos_features = [f for f in top_features if f["direction"] == "increases_risk"][:3]
-    neg_features = [f for f in top_features if f["direction"] == "decreases_risk"][:2]
+    pos_features = [f for f in top_features if f.get("direction") == "increases_risk"][:3]
+    neg_features = [f for f in top_features if f.get("direction") == "decreases_risk"][:2]
 
     drivers = []
     for f in pos_features:
@@ -607,28 +602,10 @@ def generate_clinical_explanation(
     if protective:
         explanation += f"Protective factors include: {', '.join(protective)}."
 
-    # Recommended actions
-    actions = []
-    if risk_score >= 0.70:
-        actions = [
-            "Schedule follow-up within 7 days of discharge",
-            "Consider transitional care management (TCM) program enrollment",
-            "Arrange home health aide or visiting nurse",
-            "Medication reconciliation before discharge",
-            "Patient education: warning signs requiring ED visit",
-        ]
-    elif risk_score >= 0.40:
-        actions = [
-            "Schedule follow-up within 14 days of discharge",
-            "Confirm patient has primary care physician",
-            "Review discharge medications for adherence barriers",
-            "Assess social support and transportation needs",
-        ]
-    else:
-        actions = [
-            "Standard discharge planning protocol",
-            "Ensure follow-up appointment is confirmed",
-        ]
+    # Use Clinical Intervention Engine for personalized actions
+    actions = intervention_engine.recommend_interventions(
+        risk_score, top_features, patient_context
+    )
 
     return explanation, actions
 
